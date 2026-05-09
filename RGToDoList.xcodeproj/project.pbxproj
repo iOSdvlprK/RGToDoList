@@ -10,6 +10,8 @@
 		D8DA27012FAE297700D40832 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D8DA27002FAE297700D40832 /* FirebaseAnalytics */; };
 		D8DA27032FAE297700D40832 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D8DA27022FAE297700D40832 /* FirebaseAuth */; };
 		D8DA27052FAE297700D40832 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D8DA27042FAE297700D40832 /* FirebaseFirestore */; };
+		D8E9239F2FAF6B3400423849 /* FactoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = D8E9239E2FAF6B3400423849 /* FactoryKit */; };
+		D8E923A12FAF6B3400423849 /* FactoryKitDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = D8E923A02FAF6B3400423849 /* FactoryKitDynamic */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,8 +31,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8E923A12FAF6B3400423849 /* FactoryKitDynamic in Frameworks */,
 				D8DA27012FAE297700D40832 /* FirebaseAnalytics in Frameworks */,
 				D8DA27032FAE297700D40832 /* FirebaseAuth in Frameworks */,
+				D8E9239F2FAF6B3400423849 /* FactoryKit in Frameworks */,
 				D8DA27052FAE297700D40832 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,6 +81,8 @@
 				D8DA27002FAE297700D40832 /* FirebaseAnalytics */,
 				D8DA27022FAE297700D40832 /* FirebaseAuth */,
 				D8DA27042FAE297700D40832 /* FirebaseFirestore */,
+				D8E9239E2FAF6B3400423849 /* FactoryKit */,
+				D8E923A02FAF6B3400423849 /* FactoryKitDynamic */,
 			);
 			productName = RGToDoList;
 			productReference = D8DFA7E72F757BD800DB613D /* RGToDoList.app */;
@@ -108,6 +114,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				D8DA26FF2FAE297700D40832 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				D8E9239D2FAF6B3400423849 /* XCRemoteSwiftPackageReference "Factory" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D8DFA7E82F757BD800DB613D /* Products */;
@@ -357,6 +364,14 @@
 				minimumVersion = 12.13.0;
 			};
 		};
+		D8E9239D2FAF6B3400423849 /* XCRemoteSwiftPackageReference "Factory" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hmlongco/Factory.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -374,6 +389,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D8DA26FF2FAE297700D40832 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		D8E9239E2FAF6B3400423849 /* FactoryKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D8E9239D2FAF6B3400423849 /* XCRemoteSwiftPackageReference "Factory" */;
+			productName = FactoryKit;
+		};
+		D8E923A02FAF6B3400423849 /* FactoryKitDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D8E9239D2FAF6B3400423849 /* XCRemoteSwiftPackageReference "Factory" */;
+			productName = FactoryKitDynamic;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
