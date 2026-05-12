@@ -10,9 +10,20 @@
 		D8DA27012FAE297700D40832 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D8DA27002FAE297700D40832 /* FirebaseAnalytics */; };
 		D8DA27032FAE297700D40832 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D8DA27022FAE297700D40832 /* FirebaseAuth */; };
 		D8DA27052FAE297700D40832 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D8DA27042FAE297700D40832 /* FirebaseFirestore */; };
-		D8E9239F2FAF6B3400423849 /* FactoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = D8E9239E2FAF6B3400423849 /* FactoryKit */; };
-		D8E923A12FAF6B3400423849 /* FactoryKitDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = D8E923A02FAF6B3400423849 /* FactoryKitDynamic */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D8DDC0B62FB3699900C2D8B9 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		D8DFA7E72F757BD800DB613D /* RGToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RGToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -31,10 +42,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8E923A12FAF6B3400423849 /* FactoryKitDynamic in Frameworks */,
 				D8DA27012FAE297700D40832 /* FirebaseAnalytics in Frameworks */,
 				D8DA27032FAE297700D40832 /* FirebaseAuth in Frameworks */,
-				D8E9239F2FAF6B3400423849 /* FactoryKit in Frameworks */,
 				D8DA27052FAE297700D40832 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -42,10 +51,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D80D52DE2FB36FC200F8C50D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		D8DFA7DE2F757BD800DB613D = {
 			isa = PBXGroup;
 			children = (
 				D8DFA7E92F757BD800DB613D /* RGToDoList */,
+				D80D52DE2FB36FC200F8C50D /* Frameworks */,
 				D8DFA7E82F757BD800DB613D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -68,6 +85,7 @@
 				D8DFA7E32F757BD800DB613D /* Sources */,
 				D8DFA7E42F757BD800DB613D /* Frameworks */,
 				D8DFA7E52F757BD800DB613D /* Resources */,
+				D8DDC0B62FB3699900C2D8B9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -81,8 +99,6 @@
 				D8DA27002FAE297700D40832 /* FirebaseAnalytics */,
 				D8DA27022FAE297700D40832 /* FirebaseAuth */,
 				D8DA27042FAE297700D40832 /* FirebaseFirestore */,
-				D8E9239E2FAF6B3400423849 /* FactoryKit */,
-				D8E923A02FAF6B3400423849 /* FactoryKitDynamic */,
 			);
 			productName = RGToDoList;
 			productReference = D8DFA7E72F757BD800DB613D /* RGToDoList.app */;
@@ -96,7 +112,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2630;
-				LastUpgradeCheck = 2630;
+				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					D8DFA7E62F757BD800DB613D = {
 						CreatedOnToolsVersion = 26.3;
@@ -114,7 +130,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				D8DA26FF2FAE297700D40832 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				D8E9239D2FAF6B3400423849 /* XCRemoteSwiftPackageReference "Factory" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D8DFA7E82F757BD800DB613D /* Products */;
@@ -206,6 +221,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -263,6 +279,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -364,14 +381,6 @@
 				minimumVersion = 12.13.0;
 			};
 		};
-		D8E9239D2FAF6B3400423849 /* XCRemoteSwiftPackageReference "Factory" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hmlongco/Factory.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -389,16 +398,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D8DA26FF2FAE297700D40832 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
-		};
-		D8E9239E2FAF6B3400423849 /* FactoryKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D8E9239D2FAF6B3400423849 /* XCRemoteSwiftPackageReference "Factory" */;
-			productName = FactoryKit;
-		};
-		D8E923A02FAF6B3400423849 /* FactoryKitDynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D8E9239D2FAF6B3400423849 /* XCRemoteSwiftPackageReference "Factory" */;
-			productName = FactoryKitDynamic;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
