@@ -23,3 +23,100 @@ final class AuthViewModel: ObservableObject {
 //    @Injected(\.userStore) var userStore
 //    @Injected(\.todoStore) var todoStore
 }
+
+extension AuthViewModel {
+    var canSignIn: Bool {
+        !email.isEmpty && !password.isEmpty
+    }
+    
+    var canSignUp: Bool {
+        !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty && !password.isEmpty
+    }
+    
+    var canResetPassword: Bool {
+        !email.isEmpty
+    }
+    
+    func toggleAuthType() {
+        withAnimation(.spring) {
+            currentAuthType = currentAuthType.isSignIn ? .signUp : .signIn
+        }
+    }
+    
+    func authenticate() async throws {
+        switch currentAuthType {
+        case .signIn:
+            try await signIn()
+        case .signUp:
+            try await signUp()
+        }
+    }
+    
+    func resetPassword() async throws {
+        guard canResetPassword else {
+            alert = .init(
+                title: "Reset Password Error",
+                message: "Please enter your email to reset your password."
+            )
+            return
+        }
+        try await authStore.resetPassword(email: email)
+        triggerForgotPasswordSuccess()
+    }
+}
+
+private extension AuthViewModel {
+    func signIn() async throws {
+        guard canSignIn else {
+            alert = .init(
+                title: "Sign In Error",
+                message: "Please fill in all required fields."
+            )
+            return
+        }
+        try await authStore.signIn(email: email, password: password)
+    }
+    
+    func signUp() async throws {
+        guard canSignUp else {
+            alert = .init(
+                title: "Sign Up Error",
+                message: "Make sure all fields are completed before proceeding."
+            )
+            return
+        }
+        try await authStore.signUp(email: email, password: password)
+        try createUserProfile()
+        try createListsSetup()
+    }
+    
+    func createUserProfile() throws {
+        guard let userId = authStore.getAuthenticatedUser()?.uid else { return }
+//        try userStore.createNewUser(user: .init(
+//            userId: userId,
+//            firstName: firstName,
+//            lastName: lastName,
+//            email: email,
+//            dateCreated: .init())
+//        )
+    }
+    
+    func createListsSetup() throws {
+        guard let userId = authStore.getAuthenticatedUser()?.uid else { return }
+//        try todoStore.setupUser(userId: userId)
+    }
+    
+    func triggerForgotPasswordSuccess() {
+        forgotPasswordSuccess = true
+        Task {
+            try await Task.sleep(for: .seconds(3))
+            await MainActor.run {
+                self.forgotPasswordSuccess = false
+            }
+        }
+    }
+}
+
+extension AuthViewModel: ErrorDisplayable { }
+
+extension AuthViewModel: AlertDisplayable { }
