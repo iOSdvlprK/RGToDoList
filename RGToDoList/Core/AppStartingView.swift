@@ -14,7 +14,7 @@ struct AppStartingView: View {
         Group {
             switch viewModel.appState {
             case .auth:
-                Text("Auth View")
+                AuthView()
             case .app:
                 NavigationStack {
                     Text("App")

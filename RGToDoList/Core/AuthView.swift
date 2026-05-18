@@ -13,8 +13,12 @@ struct AuthView: View {
     var body: some View {
         VStack(spacing: 20) {
             imageView
+                .padding(.bottom, 20)
             headingView
             inputFieldsView
+            forgotPasswordView
+            authenticateButtonView
+            authSwitchMessageView
         }
         .padding()
         .infinityFrame()
@@ -43,7 +47,7 @@ private extension AuthView {
     
     var inputFieldsView: some View {
         VStack(spacing: 12) {
-            if viewModel.currentAuthType.isSignIn {
+            if viewModel.currentAuthType.isSignUp {
                 TextField("First Name", text: $viewModel.firstName)
                     .textContentType(.givenName)
                     .textField(sfSymbol: "person")
@@ -66,6 +70,74 @@ private extension AuthView {
                 .textInputAutocapitalization(.never)
                 .textField(sfSymbol: "lock")
         }
+    }
+    
+    @ViewBuilder
+    var forgotPasswordView: some View {
+        forgotPasswordButtonView
+        forgotPasswordSuccessView
+    }
+    
+    @ViewBuilder
+    var forgotPasswordButtonView: some View {
+        if viewModel.currentAuthType.isSignIn {
+            Text("Forgot Password?")
+                .font(.footnote)
+                .foregroundStyle(Color.appTheme.accent)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .button {
+                    resetPassword()
+                }
+        }
+    }
+    
+    @ViewBuilder
+    var forgotPasswordSuccessView: some View {
+        if viewModel.forgotPasswordSuccess {
+            Text("Instructions to reset your password have been sent to your email.")
+                .fixedSize(horizontal: false, vertical: true)
+                .font(.callout)
+                .fontWeight(.medium)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(Color.appTheme.alternateAccent)
+                .frame(maxWidth: .infinity, alignment: .center)
+        }
+    }
+    
+    var authenticateButtonView: some View {
+        Text(viewModel.currentAuthType.description)
+            .primaryButton()
+            .button(.press) {
+                authenticate()
+            }
+    }
+    
+    var authSwitchMessageView: some View {
+        HStack(spacing: 5) {
+            Text(viewModel.currentAuthType.authSwitchMessage)
+                .foregroundStyle(Color.appTheme.secondaryText)
+            Text(viewModel.currentAuthType.oppositeTypeDescription)
+                .fontWeight(.semibold)
+                .foregroundStyle(Color.appTheme.accent)
+                .shadow(.regular)
+                .button {
+                    toggleAuthType()
+                }
+        }
+    }
+}
+
+private extension AuthView {
+    func authenticate() {
+//        try await viewModel.authenticate()
+    }
+    
+    func resetPassword() {
+//        try await viewModel.resetPassword()
+    }
+    
+    func toggleAuthType() {
+        viewModel.toggleAuthType()
     }
 }
 
