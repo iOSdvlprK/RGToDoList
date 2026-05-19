@@ -129,11 +129,15 @@ private extension AuthView {
 
 private extension AuthView {
     func authenticate() {
-//        try await viewModel.authenticate()
+        Task(handlingError: viewModel) {
+            try await viewModel.authenticate()
+        }
     }
     
     func resetPassword() {
-//        try await viewModel.resetPassword()
+        Task(handlingError: viewModel) {
+            try await viewModel.resetPassword()            
+        }
     }
     
     func toggleAuthType() {
