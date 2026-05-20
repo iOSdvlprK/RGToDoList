@@ -23,6 +23,8 @@ struct AuthView: View {
         .padding()
         .infinityFrame()
         .background(Color.appTheme.viewBackground)
+        .hideKeyboardOnTap()
+        .keyboardToolbarDoneButton()
     }
 }
 
@@ -136,7 +138,7 @@ private extension AuthView {
     
     func resetPassword() {
         Task(handlingError: viewModel) {
-            try await viewModel.resetPassword()            
+            try await viewModel.resetPassword()
         }
     }
     
