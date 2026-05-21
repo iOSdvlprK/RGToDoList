@@ -23,6 +23,8 @@ struct AuthView: View {
         .padding()
         .infinityFrame()
         .background(Color.appTheme.viewBackground)
+//        .showError(item: $viewModel.error)
+//        .showAlert(item: $viewModel.alert)
         .hideKeyboardOnTap()
         .keyboardToolbarDoneButton()
     }
