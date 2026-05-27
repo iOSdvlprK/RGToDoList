@@ -17,4 +17,7 @@ extension Container {
     var userStore: Factory<any UserStoreProtocol> {
         self { MainActor.assumeIsolated { UserStore() } }.singleton
     }
+    var todoStore: Factory<any TodoStoreProtocol> {
+        self { MainActor.assumeIsolated { TodoStore() } }.singleton
+    }
 }
