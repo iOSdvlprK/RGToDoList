@@ -17,7 +17,7 @@ struct AppStartingView: View {
                 AuthView()
             case .app:
                 NavigationStack {
-                    Text("App")
+                    TasksView()
                 }
             }
         }
