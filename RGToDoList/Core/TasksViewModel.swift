@@ -34,7 +34,7 @@ final class TasksViewModel: ObservableObject {
     
     init() {
          loadData()
-        // setSubscribers()
+         setSubscribers()
     }
     
     var shouldShowResetSearch: Bool {
@@ -63,6 +63,71 @@ private extension TasksViewModel {
             self.todoLists = try await self.todoStore.getTodoLists(for: userId)
             self.selectedTodoListId = self.todoLists.firstId()
         }
+    }
+    
+    func setSubscribers() {
+        guard let userId = authStore.getAuthenticatedUser()?.uid else { return }
+        
+        $searchText
+            .combineLatest($selectedTodoList, $completedTaskIds)
+            .sink { [weak self] searchText, selectedTodoList, completedTaskIds in
+                guard let self else { return }
+                (currentTasks, currentCompletedTasks) = (selectedTodoList?.tasks ?? [])
+                    .filtered(by: searchText)
+                    .sortedByDate()
+                    .partitionedByCompletion(using: completedTaskIds)
+            }
+            .store(in: &cancellables)
+        
+        todoStore.todoListsPublisher(userId: userId)
+            .sink {_ in } receiveValue: { [weak self] todoLists in
+                guard let self else { return }
+                Task(handlingError: self) {
+                    self.todoLists = await self.todoStore.loadTasksIntoTodoLists(todoLists: todoLists)
+                    self.subscribeToTasks(for: todoLists)
+                }
+            }
+            .store(in: &cancellables)
+        
+        subscribeToTasks(for: todoLists)
+        
+        $selectedTodoListId
+            .sink { [weak self] selectedTodoListId in
+                guard let self else { return }
+                updateCurrentTodoList(with: selectedTodoListId)
+            }
+            .store(in: &cancellables)
+        
+        $shouldShowNewTodoView
+            .combineLatest($shouldShowNewTodoListView)
+            .map { $0 || $1 }
+            .assign(to: &$shouldScrollToTop)
+    }
+    
+    func subscribeToTasks(for todoLists: [TodoList]) {
+        let taskPublishers = self.todoStore.taskPublishers(todoLists: todoLists)
+        taskPublishers.forEach { todoListId, publisher in
+            publisher
+                .sink { _ in } receiveValue: { [weak self] tasks in
+                    guard let self else { return }
+                    updateTasks(for: todoListId, with: tasks)
+                }
+                .store(in: &cancellables)
+        }
+    }
+    
+    func updateTasks(for todoListId: String, with tasks: [TodoTask]) {
+        guard let index = todoLists.firstIndex(matchingId: todoListId) else { return }
+        var updatedTodoLists = todoLists
+        updatedTodoLists[index].tasks = tasks
+        todoLists = updatedTodoLists
+        if selectedTodoList?.id == todoListId {
+            selectedTodoList = updatedTodoLists[index]
+        }
+    }
+    
+    func updateCurrentTodoList(with selectedTodoListId: String?) {
+        selectedTodoList = todoLists.first(matchingId: selectedTodoListId)
     }
 }
 
