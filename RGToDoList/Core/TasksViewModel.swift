@@ -131,6 +131,88 @@ private extension TasksViewModel {
     }
 }
 
+extension TasksViewModel {
+    func isTodoListSelected(todoListId: String?) -> Bool {
+        selectedTodoListId == todoListId
+    }
+    
+    func selectTodoList(todoListId: String?) {
+        selectedTodoListId = todoListId
+    }
+    
+    func isTaskCompleted(taskId: String) -> Bool {
+        completedTaskIds.contains(taskId)
+    }
+    
+    func addTask(name: String, description: String = "") async throws {
+        guard let selectedTodoListId else { return }
+        try await todoStore.addTask(todoListId: selectedTodoListId, name: name, description: description.isEmpty ? nil : description)
+    }
+    
+    func addTodoList(name: String) async throws {
+        guard let userId = authStore.getAuthenticatedUser()?.uid else { return }
+        guard !todoLists.contains(matchingName: name) else {
+            alert = .init(
+                title: "List Already Exists",
+                message: "You already have a to-do list named \"\(name)\". Please choose a different name."
+            )
+            return
+        }
+        try todoStore.addTodoList(name: name, ownerId: userId)
+    }
+    
+    func deleteTodoList(todoList: TodoList) async throws {
+        guard let todoListId = todoList.id else { return }
+        guard todoList.name != TodoList.DefaultTodoList.inbox.description else {
+            alert = .init(
+                title: "Cannot Delete Inbox",
+                message: "The Inbox list is a default list and cannot be deleted."
+            )
+            return
+        }
+        try await todoStore.deleteTodoList(todoListId: todoListId)
+    }
+    
+    func completeTask(taskId: String, index: Int) async throws {
+        guard let currentTodoListId = selectedTodoListId else { return }
+        completedTaskIds.insert(taskId)
+        try? await Task.sleep(for: .seconds(2))
+        completedTaskIds.remove(taskId)
+        try await todoStore.deleteTask(todoListId: currentTodoListId, taskId: taskId)
+    }
+    
+    func resetSearch() {
+        searchText = .empty
+    }
+    
+    func toggleNewTodoView() {
+        withAnimation(.spring) {
+            shouldShowNewTodoListView = false
+            shouldShowNewTodoView.toggle()
+        }
+    }
+    
+    func toggleNewTodoListView() {
+        withAnimation(.spring) {
+            shouldShowNewTodoView = false
+            shouldShowNewTodoListView.toggle()
+        }
+    }
+    
+    func scrollToTop(_ proxy: ScrollViewProxy) {
+        withAnimation(.spring) {
+            proxy.scrollTo(scrollViewAnchor, anchor: .top)
+            shouldScrollToTop = false
+        }
+    }
+}
+
+extension TasksViewModel {
+    var appName: String {
+        appInfoStore.name
+    }
+}
+
 extension TasksViewModel: ErrorDisplayable { }
 
 extension TasksViewModel: AlertDisplayable { }
