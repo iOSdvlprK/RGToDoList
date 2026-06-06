@@ -30,6 +30,22 @@ struct TasksView: View {
             }
         }
         .padding(.top)
+        .navigationBarTitleDisplayMode(.inline)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .background(Color.appTheme.viewBackground)
+        .toolbar { toolbarItems }
+        .loadingRedacted(when: viewModel.isViewLoading)
+        .showError(item: $viewModel.error)
+        .showAlert(item: $viewModel.alert)
+        .hideKeyboardOnTap()
+        .animation(.spring, value: viewModel.shouldShowEmptyStateForTasks)
+        .animation(.spring, value: viewModel.shouldShowEmptySearchStateForTasks)
+        //.sheet(isPresented: $viewModel.shouldShowSettings) {
+        //    SettingsView()
+        //}
+        .plusFab {
+            viewModel.toggleNewTodoView()
+        }
     }
 }
 
@@ -91,6 +107,30 @@ private extension TasksView {
             .foregroundStyle(Color.appTheme.alternateAccent)
             .button(.press) {
                 viewModel.toggleNewTodoListView()
+            }
+    }
+    
+    @ToolbarContentBuilder
+    var toolbarItems: some ToolbarContent {
+        ToolbarItem(placement: .principal) { mainHeader }
+        ToolbarItem(placement: .topBarTrailing) { settingsButton }
+    }
+    
+    var mainHeader: some View {
+        HStack(spacing: 5) {
+            Image(systemName: "checkmark.square")
+                .foregroundStyle(Color.appTheme.text)
+            Text(viewModel.appName)
+        }
+        .fontWeight(.semibold)
+    }
+    
+    var settingsButton: some View {
+        Image(systemName: "gear")
+            .foregroundStyle(Color.appTheme.accent)
+            .fontWeight(.semibold)
+            .button {
+                viewModel.shouldShowSettings = true
             }
     }
 }
