@@ -18,11 +18,11 @@ struct TasksView: View {
                 ScrollView {
                     VStack(spacing: 0) {
                         scrollViewTopAnchorView
-                        //newTodoListView
-                        //newTodoView
+                        newTodoListView
+                        newTodoView
                     }
-                    //tasksView
-                        //.padding(.bottom)
+                    tasksView
+                        .padding(.bottom)
                 }
                 .onChange(of: viewModel.shouldScrollToTop) { _, shouldScrollToTop in
                     if shouldScrollToTop { viewModel.scrollToTop(scrollViewProxy) }
@@ -81,6 +81,124 @@ private extension TasksView {
             }
             .padding(.horizontal)
             .padding(.vertical, 4)
+        }
+    }
+    
+    @ViewBuilder
+    var newTodoListView: some View {
+        if viewModel.shouldShowNewTodoListView {
+            NewTodoListView(
+                confirmAction: { name in
+                    Task(handlingError: viewModel) {
+                        try await viewModel.addTodoList(name: name)
+                    }
+                }, dismissAction: {
+                    viewModel.toggleNewTodoListView()
+                })
+            .padding(.horizontal)
+            .padding(.vertical, 4)
+        }
+    }
+    
+    @ViewBuilder
+    var newTodoView: some View {
+        if viewModel.shouldShowNewTodoView {
+            NewTodoView(
+                confirmAction: { name, description in
+                    Task(handlingError: viewModel) {
+                        try await viewModel.addTask(name: name, description: description)
+                    }
+                }, dismissAction: {
+                    viewModel.toggleNewTodoView()
+                })
+            .padding(.horizontal)
+            .padding(.vertical, 4)
+        }
+    }
+    
+    @ViewBuilder
+    var tasksView: some View {
+        if viewModel.shouldShowEmptyStateForTasks {
+            emptyTasksView
+        } else if viewModel.shouldShowEmptySearchStateForTasks {
+            emptySearchTasksView
+        } else {
+            VStack(spacing: 12) {
+                currentTasksView
+                completedTasksView
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 4)
+            .animation(.spring, value: viewModel.completedTaskIds)
+        }
+    }
+    
+    var emptyTasksView: some View {
+        VStack(spacing: 24) {
+            Image(.todoList)
+                .resizable()
+                .scaledToFit()
+                .frame(width: (UIScreen.current?.bounds.width ?? .zero) / 1.5)
+            VStack(spacing: 8) {
+                Text("An empty list, a fresh start!")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color.appTheme.info)
+                Text("Add your first task and take control of your day.")
+                    .font(.callout)
+                    .foregroundStyle(Color.appTheme.info)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .padding(24)
+    }
+    
+    var emptySearchTasksView: some View {
+        VStack(spacing: 24) {
+            Image(.search)
+                .resizable()
+                .scaledToFit()
+                .frame(width: (UIScreen.current?.bounds.width ?? .zero) / 1.5)
+            VStack(spacing: 12) {
+                Text("No tasks found")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color.appTheme.info)
+                let taskName = viewModel.searchText
+                Text("Add \"\(taskName)\" as a new task")
+                    .primaryButton()
+                    .button(.press) {
+                        Task(handlingError: viewModel) {
+                            try await viewModel.addTask(name: taskName)
+                            viewModel.resetSearch()
+                        }
+                    }
+            }
+        }
+        .padding(24)
+    }
+    
+    var currentTasksView: some View {
+        ForEach(Array((viewModel.currentTasks).enumerated()), id: \.element.id) { index, task in
+            TaskCompactView(
+                task: task,
+                isCompleted: viewModel.isTaskCompleted(taskId: task.id)) {
+                    Task(handlingError: viewModel) {
+                        try await viewModel.completeTask(taskId: task.id, index: index)
+                    }
+                }
+        }
+    }
+    
+    var completedTasksView: some View {
+        ForEach(Array((viewModel.currentCompletedTasks).enumerated()), id: \.element.id) { index, task in
+            TaskCompactView(
+                task: task,
+                isCompleted: viewModel.isTaskCompleted(taskId: task.id)) {
+                    Task(handlingError: viewModel) {
+                        try await viewModel.completeTask(taskId: task.id, index: index)
+                    }
+                }
         }
     }
     
